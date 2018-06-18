@@ -32,8 +32,8 @@ class HeaderMobile extends React.Component {
             currentSelected: e.key
         });
     }
-   
-     setModalVisible = (value) => {
+
+    setModalVisible = (value) => {
         this.setState({
             modalVisible: value
         })
@@ -51,6 +51,11 @@ class HeaderMobile extends React.Component {
                     userNickName: data.data.nickName,
                     userId: data.data.userId,
                 })
+                if (this.state.action === 'login') {
+                    this.setState({
+                        hasLogined: true
+                    })
+                }
                 this.setModalVisible(false);
                 message.success('注册成功');
             } else {
@@ -61,10 +66,25 @@ class HeaderMobile extends React.Component {
         })
         e.preventDefault()
     }
+    changeCallBack = (key) => {
+        switch(key) {
+            case '2': 
+                this.setState({
+                    action: 'register'
+                });
+                break;
+            case '1': 
+                this.setState({
+                    action: 'login'
+                });
+
+        }
+    }
     login = () => {
         this.setModalVisible(true);
         console.log('login')
     }
+
     render() {
         const userShow = this.state.hasLogined ?
             <a>
@@ -89,7 +109,25 @@ class HeaderMobile extends React.Component {
                     wrapClassName="vertical-center-modal"
                     okText="关闭"
                     title="用户中心">
-                    <Tabs type="card">
+                    <Tabs type="card" onChange={this.changeCallBack}>
+                        <TabPane tab="登录" key="1">
+                            <Form layout="horizontal" onSubmit={this.handleSubmit}>
+                                <FormItem label="账号">
+                                    <Input
+                                        placeholder="请输入您的账号"
+                                        {...getFieldProps('r_userName')}
+                                    />
+                                </FormItem>
+                                <FormItem label="密码">
+                                    <Input
+                                        type="password"
+                                        placeholder="请输入您的密码"
+                                        {...getFieldProps('r_passWord')}
+                                    />
+                                </FormItem>
+                                <Button type="primary" htmlType="submit" >登录</Button>
+                            </Form>
+                        </TabPane>
                         <TabPane tab="注册" key="2">
                             <Form layout="horizontal" onSubmit={this.handleSubmit}>
                                 <FormItem label="账号">
@@ -120,6 +158,6 @@ class HeaderMobile extends React.Component {
             </div>
         )
     }
-}; 
+};
 
 export default Form.create({})(HeaderMobile);

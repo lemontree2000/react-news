@@ -27,6 +27,16 @@ class HeaderPc extends React.Component {
             userId: 0
         }
     }
+    componentWillMount() {
+        if (sessionStorage.userId) {
+            this.setState({hasLogined: true});
+            this.setState({
+                userNickName: sessionStorage.userNickName,
+                userId: sessionStorage.userId
+            });
+        }
+    }
+
     handleSelectClick = (e) => {
         if (e.key === 'register') {
             this.setModalVisible(true);
@@ -72,6 +82,8 @@ class HeaderPc extends React.Component {
                         hasLogined: true
                     })
                 }
+                sessionStorage.setItem('userId', data.data.userId);
+                sessionStorage.setItem('userNickName', data.data.nickName);
                 this.setModalVisible(false);
                 message.success('请求成功');
             } else {
@@ -81,6 +93,12 @@ class HeaderPc extends React.Component {
             console.log(err);
         })
         e.preventDefault()
+    }
+    logout = () => {
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('userNickName');
+        this.setState({hasLogined: false});
+        message.warn('已登出');
     }
     render() {
         const { getFieldProps } = this.props.form;
@@ -93,7 +111,7 @@ class HeaderPc extends React.Component {
                     <Button type="dashed" htmlType="button">个人中心</Button>
                 </a>
                 &nbsp;&nbsp;
-            <Button type="ghost" htmlType="button">退出</Button>
+            <Button type="ghost" htmlType="button" onClick={this.logout}>退出</Button>
             </MenuItem>
             :
             <MenuItem key="register" className="register">
