@@ -66,7 +66,7 @@ class HeaderPc extends React.Component {
     }
     handleSubmit = (e) => {
         const formData = this.props.form.getFieldsValue();
-        Axios.post(Urls.login, {
+        Axios('mock').post(Urls.login, {
             username: formData.r_userName,
             password: formData.r_passWord,
             confirmPw: formData.r_confirmPassword
